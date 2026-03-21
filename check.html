@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ContentFlow File Checker</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:640px;margin:30px auto;padding:20px;background:#08080F;color:#F0F0F8}
+h1{font-size:18px;margin-bottom:4px;color:#C084FC}p{font-size:13px;color:#9494B8;margin-bottom:20px}
+.item{display:flex;align-items:center;gap:10px;padding:9px;margin:4px 0;border-radius:8px;font-size:13px;background:#10101A;border:1px solid #2A2A40}
+.item.ok{border-color:#34D399;background:#0d1f18}.item.fail{border-color:#F87171;background:#1f0d0d}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;background:#3A3A55}
+.dot.ok{background:#34D399}.dot.fail{background:#F87171}
+.url{font-size:11px;color:#5A5A7A;margin-top:2px;word-break:break-all}
+h2{font-size:12px;color:#9494B8;margin:18px 0 8px;text-transform:uppercase;letter-spacing:.8px}
+#summary{text-align:center;padding:16px;border-radius:10px;background:#10101A;border:2px solid #2A2A40;margin-bottom:20px}
+.score{font-size:30px;font-weight:700;color:#C084FC}
+</style>
+</head>
+<body>
+<h1>⚡ ContentFlow File Checker</h1>
+<p>Verifies all files are reachable on your live GitHub Pages site.</p>
+<div id="summary"><div class="score" id="score">Checking...</div><div style="font-size:13px;color:#9494B8">files reachable</div></div>
+<h2>Core Files</h2><div id="core"></div>
+<h2>Icons</h2><div id="icons"></div>
+<h2>Screenshots</h2><div id="shots"></div>
+<script>
+const BASE=window.location.origin+'/contentflow';
+let passed=0,total=0;
+const files={
+  core:['manifest.json','sw.js','offline.html','.nojekyll'],
+  icons:['icons/icon-72.png','icons/icon-96.png','icons/icon-192.png','icons/icon-512.png','icons/icon-maskable-192.png','icons/icon-maskable-512.png','icons/apple-touch-icon.png','icons/shortcut-idea.png','icons/shortcut-home.png'],
+  shots:['screenshots/mobile.png','screenshots/desktop.png']
+};
+async function chk(file,con){
+  total++;
+  const url=BASE+'/'+file;
+  const div=document.createElement('div');
+  div.className='item';
+  div.innerHTML=`<div class="dot" id="d${total}"></div><div><div>${file}</div><div class="url">${url}</div></div>`;
+  document.getElementById(con).appendChild(div);
+  try{
+    const r=await fetch(url,{method:'HEAD'});
+    const d=document.getElementById('d'+total);
+    if(r.ok){passed++;d.className='dot ok';div.className='item ok';div.querySelector('.url').textContent='✓ '+r.status+' OK';}
+    else{d.className='dot fail';div.className='item fail';div.querySelector('.url').textContent='✗ '+r.status+' — NOT FOUND on GitHub';}
+  }catch(e){const d=document.getElementById('d'+total);d.className='dot fail';div.className='item fail';div.querySelector('.url').textContent='✗ Error';}
+  document.getElementById('score').textContent=passed+'/'+total;
+  const s=document.getElementById('summary');s.style.borderColor=passed===total?'#34D399':'#F87171';
+}
+(async()=>{
+  for(const f of files.core) await chk(f,'core');
+  for(const f of files.icons) await chk(f,'icons');
+  for(const f of files.shots)  await chk(f,'shots');
+})();
+</script>
+</body>
+</html>

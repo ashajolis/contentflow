@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08080F">
+<title>ContentFlow — Offline</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#08080F;color:#F0F0F8;font-family:system-ui,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:32px}
+.card{background:#10101A;border:1px solid #2A2A40;border-radius:16px;padding:48px 32px;max-width:380px;width:100%}
+.icon{font-size:60px;margin-bottom:20px}
+h1{font-size:22px;font-weight:700;margin-bottom:10px;background:linear-gradient(135deg,#C084FC,#22D3EE);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+p{font-size:14px;color:#9494B8;line-height:1.6;margin-bottom:28px}
+button{background:linear-gradient(135deg,#C084FC,#818CF8);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer;width:100%}
+button:hover{opacity:0.9}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">⚡</div>
+  <h1>You're Offline</h1>
+  <p>ContentFlow needs a connection to sync your creative empire. Your data is safe — reconnect and everything will be there.</p>
+  <button onclick="window.location.reload()">Try Again</button>
+</div>
+</body>
+</html>
